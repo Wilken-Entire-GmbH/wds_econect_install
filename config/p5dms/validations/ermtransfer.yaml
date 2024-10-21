@@ -1,0 +1,137 @@
+definitions:
+  $id: 'http://wilken.de/p5/schemas/ermTransfer/defs'
+  definitions:
+    InlineOrFile:
+      type: object
+      properties:
+        file: { type: string }
+        inline: { type: [string, object] }
+      additionalProperties: false
+      oneOf:
+        - required: [file]
+        - required: [inline]
+
+    RequestData:
+      type: object
+      properties:
+        schema: { $ref: defs#/definitions/InlineOrFile }
+        defaults: { $ref: defs#/definitions/InlineOrFile }
+        transform: { $ref: defs#/definitions/InlineOrFile }
+      additionalProperties: false
+      required: [schema, defaults, transform]
+
+    VoucherWCS3Options: 
+      type: object 
+      properties: 
+        wcs: { type: [string, object ]}
+        additionalProperties: false 
+      additionalProperties: false 
+      required: [ url, wcs ]
+
+    VoucherP5DMSOptions: 
+      type: object 
+      properties: 
+        serviceUser: { type: string }
+        classifier: { type: string }
+        title: { type: string }
+        wcs: { type: [ string, object ]}
+        data: { type: [ string, object ]}
+      additionalProperties: false 
+      required: [ wcs ]
+
+    RequestVoucher:
+      type: object
+      properties:
+        description: { type: string }
+        type: { type: string, enum: [WCS3, P5DMS] }
+        mimeType: { type: string }
+        options: { type: object }
+      oneOf:
+        - properties:
+            type: { type: string, const: WCS3 }
+            options: { $ref: defs#/definitions/VoucherWCS3Options }
+        - properties:
+            type: { type: string, const: P5DMS }
+            options: { $ref: defs#/definitions/VoucherP5DMSOptions }
+      additionalProperties: false
+      required: [type, mimeType, options]
+
+    RequestConfig:
+      type: object
+      properties:
+        data: { $ref: defs#/definitions/RequestData }
+        voucher: { $ref: defs#/definitions/RequestVoucher }
+      additionalProperties: false
+      required: [data]
+
+    ResponseConfig:
+      type: object
+      properties:
+        schema: { $ref: defs#/definitions/InlineOrFile }
+        transform: { $ref: defs#/definitions/InlineOrFile }
+        mimeType: { type: string, default: application/json }
+      additionalProperties: false
+      required: [schema, transform, mimeType]
+
+    CseOptions:
+      type: object
+      properties:
+        version: { type: string, default: V1 }
+        wsdl: { type: string }
+        user: { type: string }
+        timeout: { type: string, default: '60s' }
+        password: { type: string }
+        konzern: { type: string }
+        mandant: { type: string }
+        werk: { type: string }
+      additionalProperties: false
+      required: [version, wsdl, user, timeout, password, konzern, mandant, werk]
+    EbsInputOptions:
+      type: object
+
+    TransferConfig:
+      type: object
+      properties:
+        type: { type: string }
+        title: { type: string }
+        description: { type: string }
+        mock: { type: boolean, default: true }
+        options: { type: object }
+        request: { $ref: defs#/definitions/RequestConfig }
+        response: { $ref: defs#/definitions/ResponseConfig }
+      oneOf:
+        - properties:
+            type: { type: string, const: CSE }
+            options: { $ref: defs#/definitions/CseOptions }
+        - properties:
+            type: { type: string, const: FIBU }
+            options: { $ref: defs#/definitions/EbsInputOptions }
+
+      additionalProperties: false
+      required: [type, mock, options, request, response]
+      validateTransferType: true
+
+    InvoiceInputConfig:
+      type: object
+      properties:
+        defaults: { type: object }
+        schemas:
+          type: object
+          additionalProperties: { $ref: defs#/definitions/InlineOrFile }
+        transfers:
+          type: object
+          additionalProperties: { $ref: defs#/definitions/TransferConfig }
+      required: [transfers]
+      additionalProperties: false
+
+    Defaults:
+      type: object
+
+schemas:
+  ConfigFile:
+    $id: 'http://wilken.de/p5/schemas/ermTransfer/ConfigFile'
+    $async: false
+    type: object
+    properties:
+      invoiceInput: { $ref: defs#/definitions/InvoiceInputConfig }
+    additionalProperties: false

@@ -1,0 +1,34 @@
+definitions:
+  $id: 'http://wilken.de/p5/schemas/wsTransmitter/defs'
+  definitions:
+    TransmitterContext: 
+      type: object 
+
+    TransmitterContexts: 
+      type: object 
+      additionalProperties: { $ref: defs#/definitions/TransmitterContext }
+
+    TransmitterOptions: 
+      type: object 
+      properties: 
+        maxHttpBufferSize: {type: string, default: '10000' }
+        pingTimeout: { type: string, default: 30s }
+      additionalProperties: false 
+      required: [ maxHttpBufferSize, pingTimeout ]
+      validateOptions: true 
+
+    TransmitterConfig: 
+      properties: 
+        options: { $ref: defs#/definitions/TransmitterOptions }
+        contexts: { $ref: defs#/definitions/TransmitterContexts }
+      additionalProperties: false 
+      required: [ options, contexts ]
+
+schemas:
+  ConfigFile:
+    $id: 'http://wilken.de/p5/schemas/wsTransmitter/ConfigFile'
+    $async: false
+    type: object
+    properties:
+      wsTransmitter: { $ref: defs#/definitions/TransmitterConfig }
+    additionalProperties: false

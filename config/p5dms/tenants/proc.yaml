@@ -1,0 +1,18 @@
+# P5/2 DMS WCS3 Mockservice Tenant Configuration
+
+# tenant 
+TENANT_CAPTION: Test - ERM-Konnektor
+
+# http port of service
+WDS_ERMCONNECT_HTTP_PORT: 6961
+WDS_DBAGENT_HTTP_PORT: 6962
+
+WDSDBA_TYPE: MSSQL 
+WDSDBA_USER: <???>
+WDSDBA_PASSWORD: <????>
+WDSDBA_HOSTNAME: <????>
+WDSDBA_PORT: 1433
+WDSDBA_DATABASE: <????>
+
+# general options
+WDS_SWAGGERUI_ENABLE: true 

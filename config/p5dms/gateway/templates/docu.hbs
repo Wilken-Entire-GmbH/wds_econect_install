@@ -1,0 +1,76 @@
+# {{title}}
+
+{{description}}
+
+------------------------------------------------------
+${toc}
+------------------------------------------------------
+## Aufruf
+Der Datenabruf wird über folgendes Kommando initiiert: 
+
+```bash
+curl -X 'GET' 'http<s>://<server>:<port>/custom/gateway/io{{url}}'
+```
+[interaktiv ausprobieren](/api-docs/#/Gateway%20Export/export_{{id}})
+
+### Rückgabeformate
+Folgende Formate können über den request header accept abgerufen werden:
+
+{{#if mimeType}} 
+| Mime Type |
+|---|
+| {{mimeType}} |
+{{/if}}
+
+{{#if acceptHeaders}}
+| Mime Type |
+|-----|
+{{#each acceptHeaders}}
+| {{this}} |
+{{/each}}
+
+Wird im accept header '\*/\*' übergeben, wird das erste Format in der Liste verwendet. Kann der accept header nicht aufgelöst werden, wird der HTTP Code 400 zurückgegeben.
+{{/if}}
+
+{{#if parameters}}
+
+### Parameter
+Folgende Query Parameter können beim Aufruf verwendet werden: 
+
+| Parameter | Erforderlich | Beschreibung |
+|----|------|-------------|
+{{#each parameters}}
+| {{id}}    | {{#if required}}ja{{else}}nein{{/if}}   | {{{description}}}   |
+{{/each}}
+{{/if}}
+
+<div style="page-break-after: always;"></div>
+
+## Rückgabe
+
+### Übersicht
+
+```mermaid
+{{{responseChart}}}
+```
+
+<div style="page-break-after: always;"></div>
+
+### Datenformat
+
+{{#each response}} 
+
+#### {{#if title}}{{title}} ({{id}}){{else}}{{id}}{{/if}}
+{{{description}}}
+
+| Name | Typ | Beschreibung |
+|----|------|-------------|
+{{#if rows}}
+{{#each rows}}
+| {{id}}    | {{type}}   | {{{description}}}   |
+{{/each}}
+{{else}}
+|    | {{type}} |
+{{/if}}
+{{/each}}
+

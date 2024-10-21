@@ -1,0 +1,136 @@
+definitions:
+  $id: 'http://wilken.de/p5/schemas/scheduler/defs'
+  definitions:
+    AuthBasic: 
+      action_decrypt: ['encryptPassword', 'password']
+      type: object 
+      properties: 
+        user: 
+          type: 'string'
+        password: 
+          type: 'string'
+        encryptPassword: 
+          type: 'string'
+      required: ['user']
+      additionalProperties: false 
+    AuthConfig: 
+      type: object 
+      properties: 
+        serviceUser: 
+          type: 'string'
+        basic: 
+          $ref: defs#/definitions/AuthBasic
+      additionalProperties: false 
+    HTTPConfig:
+      type: object
+      properties:
+        id: 
+          type: 'string'
+        auth: 
+          $ref: defs#/definitions/AuthConfig
+          default: {}
+        serviceUser: { type: string }
+        method:
+          type: string
+        baseUrl: 
+          type: string
+        url:
+          type: string
+        query:
+          type: object
+        body:
+          type: object
+        logResponse:
+          type: boolean
+          default: 'false'
+        disabled:
+          type: boolean 
+          default: false 
+        responseType: 
+          type: string
+          enum:  [ application/json, application/x-ndjson]
+          default: application/json
+      required:
+        - method
+        - baseUrl 
+        - url
+      additionalProperties: false
+    HTTPBatchConfig: 
+      type: object 
+      properties: 
+        batch:
+          type: 'array'
+          items: 
+            $ref: defs#/definitions/HTTPConfig
+        logResponse: 
+          type: boolean 
+          default: false 
+      required: 
+        - batch 
+      additionalProperties: false 
+    JobExecutor:
+      type: object
+      properties:
+        type:
+          type: string
+      allOf:
+        - if:
+            properties:
+              type:
+                const: http
+          then:
+            properties:
+              type:
+                type: string
+              config:
+                $ref: defs#/definitions/HTTPConfig
+            additionalProperties: false
+        - if:
+            properties:
+              type:
+                const: httpBatch
+          then:
+            properties:
+              type:
+                type: string
+              config:
+                $ref: defs#/definitions/HTTPBatchConfig
+            additionalProperties: false
+      required:
+        - type
+        - config
+      validateExecutor: true 
+    Job:
+      type: object
+      properties:
+        description: 
+          type: string 
+        active: 
+          type: boolean 
+        rule:
+          type: string 
+        execute:
+          $ref: defs#/definitions/JobExecutor
+      required:
+        - execute
+        - rule 
+      additionalProperties: false
+    SchedulerConfig:
+      type: object
+      properties:
+        jobs:
+          type: object
+          additionalProperties:
+            $ref: defs#/definitions/Job
+      required:
+        - jobs
+      additionalProperties: false
+schemas:
+  ConfigFile:
+    $id: 'http://wilken.de/p5/schemas/scheduler/ConfigFile'
+    $async: false
+    type: object
+    properties:
+      scheduler:
+        $ref: defs#/definitions/SchedulerConfig
+    additionalProperties: false

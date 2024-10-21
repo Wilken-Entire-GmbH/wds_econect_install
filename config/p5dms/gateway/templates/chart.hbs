@@ -1,0 +1,13 @@
+erDiagram
+  {{#each entities}}
+  {{id}} {
+  {{#each rows}}{{#if relation}}
+      {{type}} {{id}}
+  {{/if}}{{/each}}
+  }
+  {{/each}}
+
+  {{#each relations}}
+  {{from}} ||--{{#if multiple}}o{ {{else}}||{{/if}} {{to}} : contains 
+  {{/each}}
+

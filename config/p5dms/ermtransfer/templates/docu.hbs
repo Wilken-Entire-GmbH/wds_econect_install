@@ -1,0 +1,78 @@
+# {{title}}
+
+{{description}}
+
+------------------------------------------------------
+${toc}
+------------------------------------------------------
+## Aufruf
+Die Rechnungsübergabe wird über folgenden Aufruf initiiert: 
+
+```bash
+curl -X 'POST' \
+  'http<s>://<server>:<port>/custom/ermtransfer/{{id}}/execute' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '<Rechnungsdaten json>'
+```
+[interaktiv ausprobieren](/api-docs/#/Invoice%20Transfer/transferExecute{{id}})
+
+<div style="page-break-after: always;"></div>
+
+## Datenübergabe 
+Die Rechnungsdaten werden wie folgt übergeben: 
+
+```mermaid
+{{{request.chart}}}
+```
+
+<div style="page-break-after: always;"></div>
+
+### Formatbeschreibung Datenübergabe
+
+{{#each request.entities}} 
+
+#### {{#if title}}{{title}} ({{id}}){{else}}{{id}}{{/if}}
+{{{description}}}
+
+| Name | Typ | Beschreibung |
+|----|------|-------------|
+{{#if rows}}
+{{#each rows}}
+| {{id}}    | {{type}}   | {{{description}}}   |
+{{/each}}
+{{else}}
+|    | {{type}} |
+{{/if}}
+{{/each}}
+
+<div style="page-break-after: always;"></div>
+
+## Rückgabewerte
+Die Antwort erfolgt in folgendem Format: 
+
+```mermaid
+{{{response.chart}}}
+```
+
+<div style="page-break-after: always;"></div>
+
+### Formatbeschreibung Rückgabewerte
+
+{{#each response.entities}} 
+
+#### {{#if title}}{{title}} ({{id}}){{else}}{{id}}{{/if}}
+{{{description}}}
+
+| Name | Typ | Beschreibung |
+|----|------|-------------|
+{{#if rows}}
+{{#each rows}}
+| {{id}}    | {{type}}   | {{{description}}}   |
+{{/each}}
+{{else}}
+|    | {{type}} |
+{{/if}}
+{{/each}}
+
+

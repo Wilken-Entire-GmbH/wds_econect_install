@@ -1,0 +1,11 @@
+<ul class="fa-ul" style="margin-left: 17; margin-top: 10; padding-left: 5">
+{{#each list }}
+<li style="margin-left: 10px; margin-bottom: 5px">
+{{#if icon}}<span class="fa-li" style="padding-right: 20px; padding-top: 5px;" ><i class="fa {{icon}}"></i></span>{{/if}}<a id="d_{{id}}"></a>
+<strong>{{caption}}</strong>{{#if description}}<br>{{description}}{{/if}}
+{{#if sub}}
+    {{{p5dmsListContent sub}}}
+{{/if}}
+</li>
+{{/each}}
+</ul>

@@ -1,0 +1,33 @@
+dbagent:
+  connections:
+    ORA:
+      description: P51 Oracle Database
+      type: oracle
+      config:
+        user: ${config.env.DB.user}
+        password: ${config.env.DB.password}
+        dailyPassword: ${config.env.DB.dailyPassword}
+        host: ${config.env.DB.hostname}
+        port: ${config.env.DB.port}
+        service: ${config.env.DB.service}
+        protocol: TCP
+
+    MSSQL:
+      description: P51 on Microsoft SQL server
+      type: mssql
+      config:
+        user: 'sa'
+        password: 'Invoice123.'
+        server: '135.181.82.230'
+        port: '1433'
+        database: 'prod_db'
+        connectionTimeout: 60000
+        options: 
+          trustServerCertificate: true
+#        user: ${config.env.DB.user}
+#        password: ${config.env.DB.password}
+#        server: ${config.env.DB.hostname}
+#        port: ${config.env.DB.port}
+#        database: ${config.env.DB.database}
+
+  queries: { }

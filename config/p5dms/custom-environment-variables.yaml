@@ -1,0 +1,31 @@
+server:
+  swagger:
+    enable: WDS_SWAGGERUI_ENABLE
+    stats: WDS_SWAGGERSTATS
+  authorization:
+    enable: WDS_AUTH_ENABLE
+    certAuth: WDS_AUTH_CERTAUTH
+    systemPassword: WDS_AUTH_SYSTEM_PASSWORD
+metric:
+  enabled: WDS_METRIC_ENABLE
+  tenantid: WDS_TENANTID
+context:  
+  ERMConnector: 
+    application: 
+      title: TENANT_CAPTION
+    server: 
+      http: 
+        port: WDS_ERMCONNECT_HTTP_PORT
+  Gateway: 
+    env: 
+      dbagentbaseurl: WDS_DBAGENT_BASEURL
+  DbAgent:
+    server: 
+      http: 
+        port: WDS_DBAGENT_HTTP_PORT
+    env:
+      dbConnection: WDSDBA_ENV_DBCONNECTION
+      DB:
+        __name: WDSDBA_ENV_CONFIG_DB
+        __format: yaml
+

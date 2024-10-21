@@ -1,0 +1,42 @@
+invoiceInput:
+  defaults: {}
+  schemas:
+    enaio:
+      file: ermtransfer/schemas/enaio.yaml
+  transfers:
+    enaio:
+      type: FIBU
+      title: enaio - P5 Rechnungsübergabe
+      description: Übergabe von Buchungsdaten an das P5 ERP
+      mock: true
+      options: {}
+      request:
+        data: 
+          schema:
+            inline:
+              title: Request Rechnungsübergabe 
+              description: Übergabe Rechnungsdaten an Wilken P5 
+              type: object
+              properties:
+                Rechnung: { $ref: enaio#/Invoice }
+              required: [Rechnung]
+              additionalProperties: false
+          defaults:
+            inline: {}
+          transform: 
+            inline: {}
+      response:
+        transform:
+          inline:
+            Result: 
+              Status: ok 
+        schema:
+          inline:
+            title: Response Rechnungsübergabe
+            description: Rückantwort aus Wilken P5.
+            type: object
+            properties:
+              result: { $ref: enaio#/Result}
+            required: [result]
+            additionalProperties: false
+        mimeType: application/json

@@ -1,0 +1,117 @@
+DmsDokument:
+  type: object
+  properties:
+    dokumentid:
+      type: string
+      description: DMS DokumentenId
+  required: [dokumentid]
+
+Result: 
+  type: object 
+  properties: 
+    Status: 
+      type: string 
+      enum: [ ok, error ]
+      description: Ergebnis der Übergabe, bei Erfolg wird ok zurückgegeben, im Fehlerfall error. Bei Fehler sind dann ErrorId und Error gesetzt.
+    ErrorId:
+      type: string 
+      description: Fachliche Fehlernummer der Übergabe 
+    Error: 
+      type: string 
+      description: Beschreibung des Fehlers 
+  additionalProperties: false 
+  required: [Status]
+      
+Invoice:
+  type: object
+  properties:
+    Mandant: 
+      type: string 
+      description: Empfänger P5 Mandant
+    Rechnungsnummer: 
+      type: string 
+      description: Rechnungsnummer der Rechnung
+    Rechnungsdatum:
+      type: string
+      format: date-time
+      description: Rechnungsdatum vom Beleg
+    Rechnungsbetrag: 
+      type: number 
+      description: Brutto Betrag aus dem Rechnungskopf 
+    Waehrung:
+      type: string
+      description: Währungskennzeichen
+    Rechnungstext: 
+      type: string
+      description: Belegtext aus dem Rechnungskopf
+    Rechnungsart:
+      type: string
+      enum: [rechnung, gutschrift, korrektur]
+      description: Rechnungsart, d.h. Rechnung, Gutschrift oder Rechnungskorrektur
+    Bestellnummer: 
+      type: string 
+      description: Bestellnummer aus P5
+    Belegnummer:
+      type: string
+      description: Eindeutige Belegnummer für die P5 Buchung 
+    Skontolinie: 
+      type: string 
+      description: P5 Skontolinie. Wenn nicht gesetzt greift die Skontolinie des Geschäftspartners 
+    Buchungsdatum: 
+      type: string 
+      format: date-time
+      description: P5 Buchungsdatum für die P5 Buchung. Wenn nicht gesetzt, wird das aktuelle Datumsdatum verwendet
+    Kreditornummer: 
+      type: string 
+      description: P5 Kreditorennummer, entspricht der rollenId aus den 
+    Referenznummer: 
+      type: string 
+      description: Referenznummer für Buchung.
+    Positionen:
+      type: array
+      items: { $ref: enaio#/InvoicePosition }
+  #    dmsDokument:
+  #      $ref: cse#/DmsDokument
+  additionalProperties: false
+  required: [Mandant, Rechnungsnummer, Rechnungsdatum, Rechnungsbetrag, Rechnungstext, Rechnungsart, Belegnummer, Kreditornummer, Positionen]
+
+InvoicePosition:
+  type: object
+  properties:
+    Betrag: 
+      type: number 
+      description: Bruttobetrag der Rechnungsposition
+    Buchungstext: 
+      type: string 
+      description: Positionstext. (max. 72 Stellen)
+    Steuerschluessel: 
+      type: string
+      description: Steuerschluessel aus P5 
+    Steuerland: 
+      type: string 
+      description: Steuer Land aus P5 Steuerschlüssel
+    Sachkonto: 
+      type: string 
+      description: Sachkonto aus P5 
+    Unterkonto: 
+      type: string 
+      description: Unterkonto aus P5
+    Kostenstelle: 
+      type: string 
+      description: Kostenstelle aus P5 
+    Kostentraeger: 
+      type: string 
+      description: Kostenträger aus P5 
+    Geschaeftsbereich: 
+      type: string
+      description: Geschäftsbereich aus P5
+    Anlagennummer: 
+      type: string 
+      description: Anlagennummer aus P5 
+    Anlagekennzeichen: 
+      type: string 
+      enum: [ "01", "02"]
+      description: Teilzugang oder Neuzugang der Anlage 
+  additionalProperties: false
+  required: [Betrag, Steuerschluessel, Steuerland, Sachkonto, Kostenstelle]
+

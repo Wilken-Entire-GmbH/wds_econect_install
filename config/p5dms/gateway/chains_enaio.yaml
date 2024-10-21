@@ -1,0 +1,384 @@
+gateway:
+  components:
+    readEnaioFile:
+      challenge: readFile
+      config:
+        folder: '${config.env.enaio.importfolder}'
+
+    enaioParseCSV:
+      challenge: parseCSV
+      config:
+        delimiter: ';'
+
+    addHash:
+      challenge: expression
+      config:
+        expression: |
+          = row ~> | $ | {"hash": $hash("md5", $$.row)} |
+
+    enaioOpenEndpoint:
+      challenge: writeHttpByAcceptHeader
+      config:
+        csvDelimiter: '~'
+        acceptHeaders:
+          text/csv: csv
+          application/x-ndjson: ndjson
+          application/json: json
+
+  chains:
+    enaioTest:
+      title: Datenübergabe Empfänger
+      description: Übergabe von P5 Empfängern an enaio Anwendungen
+      components:
+        - challenge: readHttp
+          config:
+            url: '${config.env.dbagentbaseurl}/test'
+        - challenge: parseNDJSON
+        - challenge: trim
+        - challenge: removeNIL
+        - challenge: expression
+          config:
+            expression: |
+              = {
+                  "Id": row.Id, 
+                  "Name": row.Name
+                }
+        - ref: addHash
+        - ref: enaioOpenEndpoint
+          config:
+            url: /enaio/test
+            schemaId: Recipients
+            schemaContent: /gateway/schemas/Enaio.yaml
+
+    enaioRecipients:
+      title: Datenübergabe Empfänger
+      description: Übergabe von P5 Empfängern an enaio Anwendungen
+      components:
+        - challenge: readHttp
+          config:
+            url: '${config.env.dbagentbaseurl}/recipients'
+        - challenge: parseNDJSON
+        - challenge: trim
+        - challenge: removeNIL
+        - challenge: expression
+          config:
+            expression: |
+              = {
+                  "mandantId": $format("%s/%s/%s", row.KONZERN, row.MANDANTEXTERN ? row.MANDANTEXTERN : "", row.WERK),
+                  "description": row.BEZEICHNUNG,
+                  "street": "",
+                  "zip": "", 
+                  "city": "", 
+                  "country": "",
+                  "taxId": "", 
+                  "vatId": ""
+                }
+        - ref: addHash
+        - ref: enaioOpenEndpoint
+          config:
+            url: /enaio/recipients
+            schemaId: Recipients
+            schemaContent: /gateway/schemas/Enaio.yaml
+
+    enaioAnlagenstamm:
+      title: Anlagenstamm P5
+      description: Übergabe von P5 Anlagen aus dem Anlagenstamm
+      components:
+        - challenge: readHttp
+          config:
+            url: '${config.env.dbagentbaseurl}/anlagenstamm'
+        - challenge: parseNDJSON
+        - challenge: trim
+        - challenge: removeNIL
+        - challenge: expression
+          config:
+            expression: |
+              = {
+                  "mandantId": $format("%s/%s/%s", row.KONZERN, row.MANDANTEXTERN, row.WERK),
+                  "anlagenNr": row.ANLAGENNUMMER, 
+                  "folgeNummer": row.FOLGENUMMER, 
+                  "description": row.BEZEICHNUNG, 
+                  "hauptkonto": row.HAUPTKONTO, 
+                  "kostenstelle": row.KOSTENSTELLE,
+                  "anschaffungsdatum": $dateConvert(row.ANSCHAFFUNGSDATUM,"YYYY-MM-DD","DD.MM.YYYY"), 
+                  "abgangsdatum": $dateConvert(row.ABGANGSDATUM,"YYYY-MM-DD","DD.MM.YYYY") 
+                }
+        - ref: addHash
+        - ref: enaioOpenEndpoint
+          config:
+            url: /enaio/anlagenstamm
+            schemaId: Anlagenstamm
+            schemaContent: /gateway/schemas/Enaio.yaml
+
+    enaioSachkonten:
+      title: Sachkonten P5
+      description: Übergabe von P5 Sachkonten
+      components:
+        - challenge: readHttp
+          config:
+            url: '${config.env.dbagentbaseurl}/sachkonten'
+        - challenge: parseNDJSON
+        - challenge: trim
+        - challenge: removeNIL
+        - challenge: expression
+          config:
+            expression: |
+              = {
+                  "mandantId": $format("%s/%s/%s", row.KONZERN, row.MANDANTEXTERN, row.WERK),
+                  "hauptkonto": row.HAUPTKONTO,
+                  "unterkonto": row.UNTERKONTO,
+                  "bezeichnung": row.KONTOBEZEICHNUNG,
+                  "startdatum": $dateConvert(row.STARTDATUM,"YYYY-MM-DD","DD.MM.YYYY"), 
+                  "stopdatum": $dateConvert(row.STOPDATUM,"YYYY-MM-DD","DD.MM.YYYY"),  
+                  "kontofuehrung": row.KONTOFUEHRUNG
+                }
+        - ref: addHash
+        - ref: enaioOpenEndpoint
+          config:
+            url: /enaio/sachkonten
+            schemaId: Sachkonten
+            schemaContent: /gateway/schemas/Enaio.yaml
+
+    enaioKostentraeger:
+      title: Kostenträger P5
+      description: Übergabe von P5 Kostenträgern
+      components:
+        - challenge: readHttp
+          config:
+            url: '${config.env.dbagentbaseurl}/kostentraeger'
+        - challenge: parseNDJSON
+        - challenge: trim
+        - challenge: removeNIL
+        - challenge: expression
+          config:
+            expression: |
+              = {
+                  "mandantId": $format("%s/%s/%s", row.KONZERN, row.MANDANTEXTERN, ""),
+                  "kostentraegerId": row.KOSTENTRAEGER,
+                  "bezeichnung": row.BEZEICHNUNG,
+                  "art": row.KOSTENTRAEGERART,
+                  "startdatum": $dateConvert("0001-01-01","YYYY-MM-DD","DD.MM.YYYY"), 
+                  "stopdatum": $dateConvert("9999-12-31","YYYY-MM-DD","DD.MM.YYYY")
+                }
+        - ref: addHash
+        - ref: enaioOpenEndpoint
+          config:
+            url: /enaio/kostentraeger
+            schemaId: Kostentraeger
+            schemaContent: /gateway/schemas/Enaio.yaml
+
+    enaioKostenstellen:
+      title: Kostenstellen P5
+      description: Übergabe von P5 Kostenstellen
+      components:
+        - challenge: readHttp
+          config:
+            url: '${config.env.dbagentbaseurl}/kostenstellen'
+        - challenge: parseNDJSON
+        - challenge: trim
+        - challenge: removeNIL
+        - challenge: expression
+          config:
+            expression: |
+              = {
+                  "mandantId": $format("%s/%s/%s", row.KONZERN, row.MANDANTEXTERN, ""),
+                  "kostenstellenId": row.KOSTENSTELLE,
+                  "bezeichnung": row.BEZEICHNUNG,
+                  "art": row.KOSTENSTELLENART,
+                  "gbId": "", 
+                  "startdatum": $dateConvert(row.STARTDATUM,"YYYY-MM-DD","DD.MM.YYYY"), 
+                  "stopdatum": $dateConvert(row.STOPDATUM,"YYYY-MM-DD","DD.MM.YYYY")
+                }
+        - ref: addHash
+        - ref: enaioOpenEndpoint
+          config:
+            url: /enaio/kostenstellen
+            schemaId: Kostenstellen
+            schemaContent: /gateway/schemas/Enaio.yaml
+
+    enaioSteuerschluessel:
+      title: Steuerschlüssel P5
+      description: Übergabe von P5 Steuerschlüsseln
+      components:
+        - challenge: readHttp
+          config:
+            url: '${config.env.dbagentbaseurl}/steuerschluessel'
+        - challenge: parseNDJSON
+        - challenge: trim
+        - challenge: removeNIL
+        - challenge: expression
+          config:
+            expression: |
+              = {
+                  "mandantId": $format("%s/%s/%s", row.KONZERN, "",""),
+                  "schluesselId": row.STEUERSCHLUESSEL, 
+                  "country": row.LAENDERKENNZEICHEN,
+                  "name": row.NAME,
+                  "startdatum": $dateConvert(row.STARTDATUM,"YYYY-MM-DD","DD.MM.YYYY"), 
+                  "stopdatum": $dateConvert(row.STOPDATUM,"YYYY-MM-DD","DD.MM.YYYY"),
+                  "steuerart": row.STEUERART, 
+                  "prozentsatz": row.PROZENTSATZ, 
+                  "invonhundert": row.KZINVONHUNDERT,
+                  "ustvoranmeldung": row.ZEILEUSTVORANMELDUNG
+                }
+        #"normalsteuersatz": row.NORMALSTEUERSATZ
+        - ref: addHash
+        - ref: enaioOpenEndpoint
+          config:
+            url: /enaio/steuerschluessel
+            schemaId: Steuerschluessel
+            schemaContent: /gateway/schemas/Enaio.yaml
+
+    enaioSkontolinien:
+      title: Skontolinien P5
+      description: Übergabe von P5 Steuerschlüsseln
+      components:
+        - challenge: readHttp
+          config:
+            url: '${config.env.dbagentbaseurl}/skontolinien'
+        - challenge: parseNDJSON
+        - challenge: trim
+        - challenge: removeNIL
+        - challenge: expression
+          config:
+            expression: |
+              = {
+                  "mandantId": $format("%s/%s/%s", row.KONZERN, row.MANDANTEXTERN ? row.MANDANTEXTERN : "" ,row.WERK),
+                  "skontolinie": row.SKONTOLINIE, 
+                  "bezeichnung": row.BEZEICHNUNG,
+                  "startdatum": $dateConvert(row.STARTDATUM,"YYYY-MM-DD","DD.MM.YYYY"), 
+                  "stopdatum": $dateConvert(row.STOPDATUM,"YYYY-MM-DD","DD.MM.YYYY")
+                }
+        #                  "grenztage": row.GRENZTAGE,
+        #                  "faelligkeitstag": row.FAELLIGKEITSTAG,
+        #                  "skontolinienart": row.SKONTOLINIENART,
+        #                  "nettofaelligkeit": row.NETTOFAELLIGKEIT,
+        #                  "prozent": row.PROZENT,
+        #                  "prozentzinsberech": "" & row.PROZENTZINSBERECH,
+        #                  "prozentvonbrutto": row.PROZENTVOMBRUTTO,
+        - ref: addHash
+        - ref: enaioOpenEndpoint
+          config:
+            url: /enaio/skontolinien
+            schemaId: Skontolinien
+            schemaContent: /gateway/schemas/Enaio.yaml
+
+    EnaioGeschaeftspartner:
+      title: Datenübergabe Geschäftspartner
+      description: Übergabe von P5 Geschäftspartner
+      components:
+        - challenge: readHttp
+          config:
+            url: '${config.env.dbagentbaseurl}/gp'
+        - challenge: parseNDJSON
+        - challenge: trim
+        - challenge: removeNIL
+        - challenge: expression
+          config:
+            expression: |
+              = {
+                  "mandantId": $format("%s/%s/%s", row.Konzern, row.MANDANTEXTERN,""),
+                  "gpId": row.GP_Geschaeftspartnernummer, 
+                  "name": row.Person_Kurzname,
+                  "street": row.Adr_Strasse_Hausnummer_Von !="" ? $format("%s %s",row.Adr_Strasse,row.Adr_Strasse_Hausnummer_Von) : row.Adr_Strasse,
+                  "city": row.Adr_Strasse_Ort,
+                  "zip": row.Adr_Strasse_Plz,
+                  "postalcode": row.Adr_Strasse_Plz,
+                  "country": row.Adr_Land,
+                  "vatId": row.GP_UID_NUMMER != "" ? $format("%s%s",row.GP_UID_Land, row.GP_UID_Nummer) : "",
+                  "taxId": row.GP_SID_NUMMER ? row.GP_SID_NUMMER : "",
+                  "phone": row.Person_Telefon,
+                  "fax": row.Person_Telefax,
+                  "mail": row.Person_EMail
+                }
+        - ref: addHash
+        - ref: enaioOpenEndpoint
+          config:
+            url: /enaio/gp
+            schemaId: Geschaeftspartner
+            schemaContent: /gateway/schemas/Enaio.yaml
+
+    EnaioBanken:
+      title: Datenübergabe Banken
+      description: Übergabe von P5 Banken zu Geschäftspartnern
+      components:
+        - challenge: readHttp
+          config:
+            url: '${config.env.dbagentbaseurl}/banken'
+        - challenge: parseNDJSON
+        - challenge: trim
+        - challenge: removeNIL
+        - challenge: expression
+          config:
+            expression: |
+              = {
+                  "mandantId": $format("%s/%s/%s", row.Konzern, row.MANDANTEXTERN,row.WERKEXTERN ? row.WERKEXTERN : ""),
+                  "gpId": row.GP_Geschaeftspartnernummer,
+                  "bankId": row.BV_Bankno,
+                  "name":  row.BV_Name,
+                  "iban": row.BV_IBAN, 
+                  "bic": row.BV_BIC, 
+                  "primary": row.BV_Kz_Ueberweisung_Maschinell = 'T',               
+                  "startdatum": $dateConvert(row.BV_Gueltig_Ab,"YYYY-MM-DD","DD.MM.YYYY"), 
+                  "stopdatum": $dateConvert(row.BV_Gueltig_Bis,"YYYY-MM-DD","DD.MM.YYYY")
+                }
+        - ref: addHash
+        - ref: enaioOpenEndpoint
+          config:
+            url: /enaio/banken
+            schemaId: Banken
+            schemaContent: /gateway/schemas/Enaio.yaml
+
+    enaioPersonenkonten:
+      title: Personenkonten P5
+      description: Übergabe von P5 Personenkonten
+      components:
+        - challenge: readHttp
+          config:
+            url: '${config.env.dbagentbaseurl}/personenkonten'
+        - challenge: parseNDJSON
+        - challenge: trim
+        - challenge: removeNIL
+        - challenge: expression
+          config:
+            expression: |
+              = {
+                  "mandantId": $format("%s/%s/%s", row.KONZERN, row.MANDANTEXTERN,row.WERKEXTERN ? row.WERKEXTERN : ""),
+                  "rollenId": row.ROLLE_NUMMER, 
+                  "rolle": row.ROLLE_ROLLE, 
+                  "gpId": row.GPNUMMER,
+                  "hauptkonto": row.HAUPTKONTO, 
+                  "unterkonto": row.UNTERKONTO, 
+                  "startdatum": $dateConvert(row.STARTDATUM,"YYYY-MM-DD","DD.MM.YYYY"), 
+                  "stopdatum": $dateConvert(row.STOPPDATUM,"YYYY-MM-DD","DD.MM.YYYY")
+                }
+        - ref: addHash
+        - ref: enaioOpenEndpoint
+          config:
+            url: /enaio/personenkonten
+            schemaId: Personenkonten
+            schemaContent: /gateway/schemas/Enaio.yaml
+
+    enaioGeschaeftsbereiche:
+      title: Geschäftsbereiche P5
+      description: Übergabe von P5 Geschäftsbereichen
+      components:
+        - challenge: readNothing
+        - challenge: parseNDJSON
+        - challenge: trim
+        - challenge: removeNIL
+        - challenge: expression
+          config:
+            expression: |
+              = {
+                  "mandantId": $format("%s/%s/%s","",""),
+                  "gbId": "",
+                  "bezeichnung": ""
+                }
+        - ref: addHash
+        - ref: enaioOpenEndpoint
+          config:
+            url: /enaio/geschaeftsbereiche
+            schemaId: Geschaeftsbereiche
+            schemaContent: /gateway/schemas/Enaio.yaml
+

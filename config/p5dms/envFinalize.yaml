@@ -1,0 +1,13 @@
+WDS_DBAGENT_BASEURL: 'http://${env.SERVER_IPORNAME}:${env.WDS_DBAGENT_HTTP_PORT}/custom/dbagent/execute'
+
+WDSDBA_ENV_DBCONNECTION: '${env.WDSDBA_TYPE}'
+
+WDSDBA_ENV_CONFIG_DB:
+  database: '${env.WDSDBA_DATABASE}' 
+  hostname: '${env.WDSDBA_HOSTNAME}'
+  port: '${env.WDSDBA_PORT}' 
+  user: '${env.WDSDBA_USER}'
+  password: '${env.WDSDBA_PASSWORD}'
+  dailyPassword: '${env.WDSDBA_DAILYPASSWORD}'
+  service: '${env.WDSDBA_SERVICE}'
+  

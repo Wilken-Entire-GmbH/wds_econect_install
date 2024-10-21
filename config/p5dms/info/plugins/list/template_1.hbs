@@ -1,0 +1,11 @@
+<ol class="p5dmslist" style="margin-left: 10; padding-left: 5">
+{{#each list }}
+<li class="p5dmslist" style="margin-left: 10px">
+{{#if icon}}<span><i class="fa {{icon}}"></i></span>{{/if}}
+<strong>{{caption}}</strong>{{#if description}}<br>{{description}}{{/if}}
+{{#if sub}}
+    {{{p5dmsListContent sub}}}
+{{/if}}
+</li>
+{{/each}}
+</ol>

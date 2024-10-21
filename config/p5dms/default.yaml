@@ -1,0 +1,96 @@
+server:
+  log:
+    severity: debug 
+    transports:
+      DailyRotateFile:
+        active: true
+        options:
+          datePattern: YYYY-MM-DD 
+          dirname: /logs 
+          extension: .log
+          maxSize: 20m    
+          maxFiles: 14d   
+      Console:
+        active: true
+  swagger:
+    enable: '' 
+    file: assets/openapi.yaml
+    uipath: /api-docs
+    stats: true
+  authorization:
+    enable: false 
+    certAuth: false 
+    #systemPassword: f7bfd3b813d09aa8b62ff49d3094adaa7187da2b79f1bd6c7d5b4663ed962d6d
+    login:
+      - auth: basic
+    access:
+      auth: basic
+  ca:
+    url: 'http://authority:8080' 
+  bindProtocol: ['http']
+  http:
+    port: 8080
+metric:
+  tenantid: p5erm
+  enabled: true
+  collectDefault: true
+retrieval:
+  url: 'http://retrieval:8080'
+ipu:
+  url: 'http://ipu:8080'
+services:
+  gateway:
+    url: 'http://retrieval:8080'
+  info:
+    url: 'http://connect:8080'
+    public: info/public
+    maxAge: 1d
+context:
+  Info:
+    config:
+      file: info/config.yaml
+  ERMConnector: 
+    server: 
+      http: 
+        port: 8080
+    application: 
+      title: P5 ERM Connector 
+    plugins: 
+      - id: wds_gateway 
+      - id: wds_ermtransfer
+      - id: wds_info
+  ERMTransfer: 
+    application: 
+      title: P5 ERM Transfer
+    config:
+      file: ermtransfer/config.yaml
+      templates: ermtransfer/templates 
+    env: {}
+  Scheduler:
+    config:
+      file: scheduler/jobs.yaml
+  Gateway:
+    config:
+      file: gateway/chains.yaml 
+      templates: gateway/templates
+    env:
+      url: ''
+      cs2:
+        importfolder: testdata
+      enaio: 
+        importfolder: ../../runtime/testdata/enaio
+
+  DbAgent:
+    application:
+      title: P/5 DMS - Database Access Agent
+    server: 
+      http: 
+        port: 8080
+    config:
+      file: dbagent/dbconfig.yaml
+      db:
+        oracle:
+          client: driver/oracle/instant
+        db2:
+          clidriver: driver/db2/clidriver
+

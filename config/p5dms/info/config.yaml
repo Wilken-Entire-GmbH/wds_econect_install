@@ -1,0 +1,13 @@
+infoserver: 
+  generation: 
+    html:
+      wrapper: info/templates/htmlwrapper.html 
+  
+  content: 
+    root: info/content 
+
+  plugins: 
+    p5dmsList: 
+      template: info/plugins/list/template.hbs
+
+

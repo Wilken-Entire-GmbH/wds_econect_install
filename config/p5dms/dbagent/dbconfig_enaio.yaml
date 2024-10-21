@@ -1,0 +1,87 @@
+dbagent:
+  connections: {}
+  queries:
+    test:
+      url: /test
+      description: Recipients for invoicing
+      enabled: true 
+      connection: ${config.env.dbConnection}  
+      query: 'SELECT * from WorkflowElements'
+
+    enaioRecipients:
+      url: /recipients
+      description: Recipients for invoicing
+      enabled: true 
+      connection: ${config.env.dbConnection}  
+      query: 'SELECT * from cs2.VWEC_RECIPIENTS'
+
+    enaioAnlagenstamm:
+      url: /anlagenstamm
+      description: Analgenstamm for invoicing 
+      enabled: true 
+      connection: ${config.env.dbConnection} 
+      query: 'SELECT * from cs2.VWEC_ANLAGENSTAMM' 
+
+    enaioSachkonten:
+      url: /sachkonten
+      description: Sachkonten for invoicing 
+      enabled: true 
+      connection: ${config.env.dbConnection} 
+      query: 'SELECT * from cs2.VWEC_SACHKONTEN' 
+
+    enaioKostentraeger:
+      url: /kostentraeger
+      description: Kostenträger for invoicing
+      enabled: true
+      connection: ${config.env.dbConnection}
+      query:  'SELECT * from cs2.VWEC_KOSTENTRAEGER' 
+
+    enaioKostenstellen:
+      url: /kostenstellen
+      description: Kostenstellen for invoicing
+      enabled: true
+      connection: ${config.env.dbConnection}
+      query: 'SELECT * from cs2.VWEC_KOSTENSTELLEN' 
+
+    enaioSteuerschluessel:
+      url: /steuerschluessel
+      description: Steuerschlüssel for invoicing
+      enabled: true
+      connection: ${config.env.dbConnection}
+      query: 'SELECT * from cs2.VWEC_STEUERSCHLUESSEL'
+
+    enaioSkontolinien:
+      url: /skontolinien
+      description: Skontolinien for invoicing
+      enabled: true
+      connection: ${config.env.dbConnection}
+      query: 'SELECT * from cs2.VWEC_SKONTOLINIEN' 
+
+    enaioGP:
+      url: /gp
+      description: Geschäftspartner for invoicing
+      enabled: true
+      connection: ${config.env.dbConnection}
+      query: 'SELECT * from cs2.VWEC_GP'
+
+    enaioBanken:
+      url: /banken
+      description: Banken for invoicing
+      enabled: true
+      connection: ${config.env.dbConnection}
+      query: 'SELECT * from cs2.VWEC_BANKEN' 
+
+    enaioPersonenkonten:
+      url: /personenkonten
+      description: Personenkonten for invoicing
+      enabled: true
+      connection: ${config.env.dbConnection}
+      query: 'SELECT * from cs2.VWEC_PERSONENKONTEN'
+
+    enaioGB:
+      url: /geschaeftsbereiche
+      description: Geschäftsbereiche for invoicing
+      enabled: true
+      connection: ${config.env.dbConnection}
+      query: 'SELECT * from cs2.VWEC_GESCHAEFTSBEREICHE' 
+

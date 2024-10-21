@@ -1,0 +1,57 @@
+definitions:
+  $id: 'http://wilken.de/p5/schemas/info/defs'
+  definitions:
+
+    HTMLConfig: 
+      type: object 
+      properties: 
+        wrapper: { type: 'string' }
+      required: [ 'wrapper']
+      additionalProperties: false 
+
+    ContentConfig: 
+      type: object 
+      properties: 
+        root: { type: 'string' }
+      required: [ 'root' ]
+      additionalProperties: false 
+    
+    GenConfig: 
+      type: object 
+      properties: 
+        html: { $ref: defs#/definitions/HTMLConfig }
+      required: [ 'html' ]
+      additionalProperties: false 
+
+    P5DMSListPlugin: 
+      type: object 
+      properties: 
+        template: { type: string }
+      required: [ template ]
+      additionalProperties: false 
+
+    PluginsConfig: 
+      type: object 
+      properties: 
+        p5dmsList: { $ref: defs#/definitions/P5DMSListPlugin }
+      required: [ p5dmsList ]
+      additionalProperties: false 
+
+    InfoConfig:
+      type: object
+      properties:
+        generation: { $ref: defs#/definitions/GenConfig }
+        content: { $ref: defs#/definitions/ContentConfig }
+        plugins: { $ref: defs#/definitions/PluginsConfig }
+      required: [ 'content', 'generation', plugins ]
+      additionalProperties: false 
+      
+schemas:
+  ConfigFile:
+    $id: 'http://wilken.de/p5/schemas/info/ConfigFile'
+    $async: false
+    type: object
+    properties:
+      infoserver:
+        $ref: defs#/definitions/InfoConfig
+    additionalProperties: false

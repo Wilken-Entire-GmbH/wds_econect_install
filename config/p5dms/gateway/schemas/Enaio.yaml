@@ -1,0 +1,450 @@
+Recipients:
+  description: Liste der Rechnungsempfänger
+  type: array
+  items:
+    $ref: '#/Recipient'
+
+Recipient:
+  description: |
+    Mandanten sind Empfänger von Rechnungen/Buchungen. Jede Übergabe benöitigt einen Empfänger
+  type: object
+  properties:
+    mandantId:
+      type: string
+      description: P5 Empfänger (KMW)
+    description:
+      type: string
+      description: Name des Empfängers
+    street:
+      type: string
+      description: Straße
+    zip:
+      type: string
+      description: Postleitzahl
+    city:
+      type: string
+      description: Werk
+    country:
+      type: string
+      description: Empfänger Land
+    taxId:
+      type: string
+      description: Steuernummer
+    vatId:
+      type: string
+      description: Umsatzsteuer ID
+    hash:
+      type: string
+      description: Eindeutiger Hashwert des Datensatzes
+  required: [mandantId]
+
+Anlagenstamm:
+  description: Liste der Anlagen
+  type: array
+  items:
+    $ref: '#/Anlage'
+
+Anlage:
+  description: |
+    P5 Anlagenstamm
+  type: object
+  properties:
+    mandantId:
+      type: string
+      description: P5 Empfänger (KMW)
+    anlagenNr:
+      type: string
+      description: Anlagennummer
+    folgeNummer:
+      type: string
+      description: Folgenummer
+    description:
+      type: string
+      description: Bezeichnung
+    hauptkonto:
+      type: string
+      description: Hauptkonto
+    kostenstelle:
+      type: string
+      description: Kostenstelle
+    anschaffungsdatum:
+      type: string
+      desscription: Anschaffungsdatum
+    abgangsdatum:
+      type: string
+      description: Abgangsdatum
+    hash:
+      type: string
+      description: Eindeutiger Hashwert des Datensatzes
+  required: [mandantId, anlagenNr]
+
+Sachkonten:
+  description: Liste der Sachkonten
+  type: array
+  items:
+    $ref: '#/Sachkonto'
+
+Sachkonto:
+  description: |
+    P5 Finanzbuchhaltung Sachkonten
+  type: object
+  properties:
+    mandantId:
+      type: string
+      description: P5 Empfänger (KMW)
+    hauptkonto:
+      type: string
+      description: Hauptkonto
+    unterkonto:
+      type: string
+      description: Unterkonto
+    bezeichnung:
+      type: string
+      description: Bezeichnung
+    startdatum:
+      type: string
+      description: Startdatum
+    stopdatum:
+      type: string
+      description: Stopdatum
+    kontofuehrung:
+      type: string
+      description: Kontoführung
+    hash:
+      type: string
+      description: Eindeutiger Hashwert des Datensatzes
+  required: [mandantId, hauptkonto]
+
+Kostenträgerliste:
+  description: Liste der Kostenträger
+  type: array
+  items:
+    $ref: '#/Kostentraeger'
+
+Kostentraeger:
+  description: |
+    P5 Kostenträger
+  type: object
+  properties:
+    mandantId:
+      type: string
+      description: P5 Empfänger (KMW)
+    kostentraegerId:
+      type: string
+      description: Kostenträger
+    bezeichnung:
+      type: string
+      description: Bezeichnung
+    art:
+      type: string
+      description: Kostenträgerart
+    startdatum:
+      type: string
+      description: gültig von
+    stopdatum:
+      type: string
+      description: gültig bis
+    hash:
+      type: string
+      description: Eindeutiger Hashwert des Datensatzes
+  required: [mandantId, kostentraegerId]
+
+Kostenstellen:
+  description: Liste der Kostenstellen
+  type: array
+  items:
+    $ref: '#/Kostenstelle'
+
+Kostenstelle:
+  description: |
+    P5 Kostenstellen
+  type: object
+  properties:
+    mandantId:
+      type: string
+      description: P5 Empfänger (KMW)
+    kostenstellenId:
+      type: string
+      description: Kostenstelle
+    bezeichnung:
+      type: string
+      description: Bezeichnung
+    startdatum:
+      type: string
+      description: gültig von
+    stopdatum:
+      type: string
+      description: gültig bis
+    art:
+      type: string
+      description: Kostenstellenart
+    gbId:
+      type: string
+      description: id des zugeordneten Geschäftsbereichs
+    hash:
+      type: string
+      description: Eindeutiger Hashwert des Datensatzes
+  required: [mandantId, kostenstellenId]
+
+Steuerschluesseliste:
+  description: Liste der Steuerschlüssel
+  type: array
+  items:
+    $ref: '#/Steuerschluessel'
+
+Steuerschluessel:
+  description: |
+    P5 Steuerschlüssel
+  type: object
+  properties:
+    mandantId:
+      type: string
+      description: P5 Empfänger (KMW)
+    schluesselId:
+      type: string
+      description: Schlüssel
+    name:
+      type: string
+      description: Name
+    country:
+      type: string
+      description: Länderkennzeichen
+    startdatum:
+      type: string
+      description: gültig von
+    stopdatum:
+      type: string
+      description: gültig bis
+    steuerart:
+      type: string
+      description: Steuerart
+    prozentsatz:
+      type: string
+      description: Prozentsatz
+    invonhundert:
+      type: string
+      description: Kennzeichen in von Hundert
+    ustvoranmeldung:
+      type: string
+      description: Umsatzsteuer Voranmeldung
+    #normalsteuersatz:
+    # type: string
+    #description: Normalsteuersatz
+    hash:
+      type: string
+      description: Eindeutiger Hashwert des Datensatzes
+  required: [mandantId, schluesselId]
+
+Skontolinien:
+  description: Liste der Skontolinien
+  type: array
+  items:
+    $ref: '#/Skontolinie'
+
+Skontolinie:
+  description: |
+    P5 Skontolinien
+  type: object
+  properties:
+    mandantId:
+      type: string
+      description: P5 Empfänger (KMW)
+    skontolinie:
+      type: string
+      description: Skontolinie
+    bezeichnung:
+      type: string
+      description: Bezeichnung
+    grenztage:
+      type: string
+      description: Grenztage
+    faelligkeitstag:
+      type: string
+      description: Fällikeitstag
+    skontolinienart:
+      type: string
+      description: Skontolinienart
+    nettofaelligkeit:
+      type: string
+      description: Nettofälligkeit
+    prozent:
+      type: string
+      description: Prozent
+    prozentinsberech:
+      type: string
+      description: Prozentzinsbereich
+    prozentvonbrutto:
+      type: string
+      description: Prozent vom Brutto
+    startdatum:
+      type: string
+      description: Startdatum
+    stopdatum:
+      type: string
+      description: Stoppdatum
+    hash:
+      type: string
+      description: Eindeutiger Hashwert des Datensatzes
+  required: [mandantId, skontolinie]
+
+Geschaeftspartnerliste:
+  description: Liste der Geschäftspartner
+  type: array
+  items:
+    $ref: '#/Geschaeftspartner'
+
+Geschaeftspartner:
+  description: P5 Geschäftspartner
+  type: object
+  properties:
+    mandantId:
+      type: string
+      description: P5 Empfänger (KMW)
+    gpId:
+      type: string
+      description: P5 Geschäftspartner Id
+    name:
+      type: string
+      description: Name
+    street:
+      type: string
+      description: Straße
+    zip:
+      type: string
+      description: Postleitzahl
+    postalcode:
+      type: string
+      description: Postfach
+    city:
+      type: string
+      description: Ort
+    country:
+      type: string
+      description: Land
+    vatId:
+      type: string
+      description: Umsatzsteuer Id
+    taxId:
+      type: string
+      description: Steuernummer
+    phone:
+      type: string
+      description: Telefon
+    fax:
+      type: string
+      description: Fax
+    mail:
+      type: string
+      description: E-Mail
+    hash:
+      type: string
+      description: Eindeutiger Hashwert des Datensatzes
+  required: [mandantId, gpId]
+
+Banken:
+  description: Liste der Bankverbindungen
+  type: array
+  items:
+    $ref: '#/Bank'
+
+Bank:
+  description: P5 Geschäftspartner Banken
+  type: object
+  properties:
+    mandantId:
+      type: string
+      description: P5 Empfänger (KMW)
+    gpId:
+      type: string
+      description: P5 Geschäftspartner Id
+    bankId:
+      type: string
+      description: Eindeutiger Schlüssel
+    name:
+      type: string
+      description: Institut
+    iban:
+      type: string
+      description: IBAN
+    bic:
+      type: string
+      description: bic
+    primary:
+      type: boolean
+      description: Bevorzugte Bankverbindung
+    startdatum:
+      type: string
+      description: Startdatum
+    stopdatum:
+      type: string
+      description: Stoppdatum
+    hash:
+      type: string
+      description: Eindeutiger Hashwert des Datensatzes
+  required: [iban, gpId, bankId]
+
+Personenkonten:
+  description: Liste der Personenkonten
+  type: array
+  items:
+    $ref: '#/Personenkonto'
+
+Personenkonto:
+  description: |
+    P5 Personenkonto
+  type: object
+  properties:
+    mandantId:
+      type: string
+      description: P5 Empfänger (KMW)
+    rollenId:
+      type: string
+      description: Die rollenid in Verbindung mit rolle wird als Kreditor/Debitor bei der Buchung übergeben.
+    rolle:
+      type: string
+      description: Kennzeichen für Kreditor (K) oder Debitor (D)
+      enum: ['K', 'D']
+    gpId:
+      type: string
+      description: Geschäftspartner Nummer
+    hauptkonto:
+      type: string
+      description: Hauptkonto
+    unterkonto:
+      type: string
+      description: Unterkonto
+    startdatum:
+      type: string
+      description: gültig von
+    stopdatum:
+      type: string
+      description: gültig bis
+    hash:
+      type: string
+      description: Eindeutiger Hashwert des Datensatzes
+
+Geschaeftsbereiche:
+  description: Liste der Geschäftsbereiche
+  type: array
+  items:
+    $ref: '#/Geschaeftsbereich'
+
+Geschaeftsbereich:
+  description: |
+    P5 Geschäftsbereich
+  type: object
+  properties:
+    mandantId:
+      type: string
+      description: P5 Empfänger (KMW)
+    gbId:
+      type: string
+      description: Geschäftsbereich Id
+    bezeichnung:
+      type: string
+      description: Bezeichnung
+    hash:
+      type: string
+      description: Eindeutiger Hashwert des Datensatzes
+  required: [mandantId, gbId]
+

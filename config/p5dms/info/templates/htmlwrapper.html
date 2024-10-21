@@ -1,0 +1,51 @@
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="/help/public/hl1.css">
+<link rel="stylesheet" href="/help/public/md1.css">
+<link rel="stylesheet" href="/help/public/lib/fontawesome/css/all.min.css">
+<style>
+	.markdown-body {
+		box-sizing: border-box;
+		min-width: 200px;
+		max-width: 980px;
+		margin: 0 auto;
+		padding: 45px;
+	}
+
+	@media (max-width: 767px) {
+		.markdown-body {
+			padding: 15px;
+		}
+	}
+        
+</style>
+
+<script src="/help/public/lib/mermaid.min.js"></script>
+<style> 
+g i {
+  padding-left: 15; 
+  padding-right: 15; 
+}
+foreignObject div {
+  padding-right: 15;
+}
+</style>
+<script>
+		mermaid.initialize({ 
+			startOnLoad: true,
+                        logLevel: 3, 
+			flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'basis' },
+			securityLevel:'loose',
+			theme: 'default',
+       			mermaid: {
+			  callback: function (id) {
+		       	    var tag = document.getElementById(id);
+                            tag && tag.removeAttribute('height'); 
+                          }
+                        }
+
+		});
+</script>
+
+<article class="markdown-body">
+${content}
+</article>
